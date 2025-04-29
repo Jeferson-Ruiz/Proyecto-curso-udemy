@@ -8,5 +8,5 @@ public interface ItemService {
 
     List<ItemDto> findByAll();
 
-    Optional<ItemDto> findById();
+    Optional<ItemDto> findById(Long id);
 }

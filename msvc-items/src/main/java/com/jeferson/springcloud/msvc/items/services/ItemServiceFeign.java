@@ -1,0 +1,40 @@
+package com.jeferson.springcloud.msvc.items.services;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import com.jeferson.springcloud.msvc.items.clients.ProductFeignClient;
+import com.jeferson.springcloud.msvc.items.models.ItemDto;
+import com.jeferson.springcloud.msvc.items.models.ProductDto;
+
+@Service
+public class ItemServiceFeign implements ItemService{
+
+    private final ProductFeignClient productFeignClient;
+
+    public ItemServiceFeign(ProductFeignClient productFeignClient) {
+        this.productFeignClient = productFeignClient;
+    }
+
+    @Override
+    public List<ItemDto> findByAll() {
+        return productFeignClient.listProducts()
+            .stream()
+            .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<ItemDto> findById(Long id) {
+        ProductDto product = productFeignClient.details(id);
+
+        if (product == null) {
+            return Optional.empty();
+        }
+        return Optional.of(new ItemDto(product, new Random().nextInt(10) + 1));
+    }
+
+
+}
