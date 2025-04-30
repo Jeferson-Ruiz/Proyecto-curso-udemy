@@ -36,5 +36,4 @@ public class ItemServiceFeign implements ItemService{
         return Optional.of(new ItemDto(product, new Random().nextInt(10) + 1));
     }
 
-
 }
