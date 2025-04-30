@@ -12,6 +12,6 @@ public interface ProductFeignClient {
     @GetMapping
     List<ProductDto> listProducts();  
 
-    @GetMapping
+    @GetMapping("/{id}")
     ProductDto details(@PathVariable Long id);
 }
