@@ -1,5 +1,6 @@
 package com.jeferson.springcloud.msvc.items.controllers;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,13 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDto> details(@PathVariable Long id){
+    public ResponseEntity<?> details(@PathVariable Long id){
         Optional<ItemDto> optItem  = itemService.findById(id);
         if (optItem.isPresent()) {
             return ResponseEntity.ok(optItem.get());
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(404)
+            .body(Collections.singletonMap(
+                "message","No existe el producto en el micorservicio msvc-products"));    
     }
-
 }

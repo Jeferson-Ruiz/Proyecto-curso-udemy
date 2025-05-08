@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
 import com.jeferson.springcloud.msvc.items.models.ProductDto;
@@ -42,11 +43,16 @@ public class ItemServiceWebClient implements ItemService {
         Map<String, Long> params = new HashMap<>();
         params.put("id", id);
 
-        return Optional.ofNullable(client.build().get().uri("http://msvc-products/{id}",params)
-        .accept(MediaType.APPLICATION_JSON)
-        .retrieve()
-        .bodyToMono(ProductDto.class)
-        .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
-        .block());
+        try{
+            return Optional.ofNullable(client.build().get().uri("http://msvc-products/{id}",params)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(ProductDto.class)
+            .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
+            .block());
+
+        }catch(WebClientRequestException e){
+            return Optional.empty();
+        }
     }
 }
