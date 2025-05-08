@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
+import com.jeferson.springcloud.msvc.items.models.ProductDto;
 
+@Primary
 @Service
 public class ItemServiceWebClient implements ItemService {
 
@@ -26,7 +30,8 @@ public class ItemServiceWebClient implements ItemService {
         .uri("http://msvc-products")
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
-        .bodyToFlux(ItemDto.class)
+        .bodyToFlux(ProductDto.class)
+            .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
         .collectList()
             .block();
     }
@@ -40,7 +45,8 @@ public class ItemServiceWebClient implements ItemService {
         return Optional.ofNullable(client.build().get().uri("http://msvc-products/{id}",params)
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
-        .bodyToMono(ItemDto.class)
+        .bodyToMono(ProductDto.class)
+        .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
         .block());
     }
 }
