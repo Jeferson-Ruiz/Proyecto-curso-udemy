@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.jeferson.springcloud.msvc.items.clients.ProductFeignClient;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
 import com.jeferson.springcloud.msvc.items.models.ProductDto;
-
 import feign.FeignException.FeignClientException;
 
 @Service
