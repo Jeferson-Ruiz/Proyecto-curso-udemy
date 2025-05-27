@@ -42,7 +42,7 @@ public class ItemServiceWebClient implements ItemService {
         Map<String, Long> params = new HashMap<>();
         params.put("id", id);
 
-        try{
+        // try{
             return Optional.ofNullable(client.build().get().uri("/{id}",params)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
@@ -50,8 +50,8 @@ public class ItemServiceWebClient implements ItemService {
             .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
             .block());
 
-        }catch(WebClientRequestException e){
-            return Optional.empty();
-        }
+        // }catch(WebClientRequestException e){
+        //     return Optional.empty();
+        // }
     }
 }
