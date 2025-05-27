@@ -25,13 +25,13 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> details(@PathVariable Long id) throws InterruptedException {
-        
+
         if (id.equals(10L)) {
             throw new IllegalStateException("Producto no encontrado");
         }
 
         if (id.equals(7L)) {
-            TimeUnit.SECONDS.sleep(5L);
+            TimeUnit.SECONDS.sleep(1L);
         }
 
         Optional<Product> productOptional = productService.findById(id);

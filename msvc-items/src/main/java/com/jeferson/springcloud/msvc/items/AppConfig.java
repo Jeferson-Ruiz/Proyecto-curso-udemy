@@ -7,6 +7,7 @@ import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
+import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 
 // Configuaracion parametros circuite breaker
 @Configuration
@@ -22,6 +23,8 @@ public class AppConfig {
                     .waitDurationInOpenState(Duration.ofSeconds(10L))
                     .permittedNumberOfCallsInHalfOpenState(5)
                     .build())
+                    .timeLimiterConfig(TimeLimiterConfig.custom()
+                        .timeoutDuration(Duration.ofSeconds(3L)).build())
                     .build();
         });
 
