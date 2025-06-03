@@ -15,6 +15,8 @@ import com.jeferson.springcloud.msvc.items.models.ItemDto;
 import com.jeferson.springcloud.msvc.items.models.ProductDto;
 import com.jeferson.springcloud.msvc.items.services.ItemService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @RestController
 public class ItemController {
 
@@ -23,20 +25,20 @@ public class ItemController {
     private final ItemService itemService;
     private final CircuitBreakerFactory cBreakerFactory;
 
-    public ItemController(ItemService itemService, CircuitBreakerFactory cBreakerFactory){
+    public ItemController(ItemService itemService, CircuitBreakerFactory cBreakerFactory) {
         this.itemService = itemService;
         this.cBreakerFactory = cBreakerFactory;
     }
 
     @GetMapping
-    public List<ItemDto> list (){
+    public List<ItemDto> list() {
         return itemService.findByAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> details(@PathVariable Long id) throws InterruptedException{
+    public ResponseEntity<?> details(@PathVariable Long id) throws InterruptedException {
 
-        Optional<ItemDto> optItem = cBreakerFactory.create("items").run( () -> itemService.findById(id), e ->{
+        Optional<ItemDto> optItem = cBreakerFactory.create("items").run(() -> itemService.findById(id), e -> {
             System.out.println(e.getMessage());
             logger.error(e.getMessage());
             ProductDto product = new ProductDto();
@@ -51,7 +53,33 @@ public class ItemController {
             return ResponseEntity.ok(optItem.get());
         }
         return ResponseEntity.status(404)
-            .body(Collections.singletonMap(
-                "message","No existe el producto en el micorservicio msvc-products"));    
+                .body(Collections.singletonMap(
+                        "message", "No existe el producto en el micorservicio msvc-products"));
+    }
+
+    // La anotacion circuiteBreaker es compatible con el application yml no con la
+    // forma programatica
+    @CircuitBreaker(name = "items", fallbackMethod = "getFallBackMethodProduct")
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> details2(@PathVariable Long id) throws InterruptedException {
+
+        Optional<ItemDto> optItem = itemService.findById(id);
+        if (optItem.isPresent()) {
+            return ResponseEntity.ok(optItem.get());
+        }
+        return ResponseEntity.status(404)
+                .body(Collections.singletonMap(
+                        "message", "No existe el producto en el micorservicio msvc-products"));
+    }
+
+    public ResponseEntity<?> getFallBackMethodProduct(Throwable e) {
+        System.out.println(e.getMessage());
+        logger.error(e.getMessage());
+        ProductDto product = new ProductDto();
+        product.setCreateAt(LocalDate.now());
+        product.setId(1L);
+        product.setName("Camara Sony");
+        product.setPrice(1250.00);
+        return ResponseEntity.ok(new ItemDto(product, 5));
     }
 }
