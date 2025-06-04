@@ -73,7 +73,8 @@ public class ItemController {
                         "message", "No existe el producto en el micorservicio msvc-products"));
     }
 
-    @TimeLimiter(name = "items", fallbackMethod = "getFallBackMethodProduct2")
+    @CircuitBreaker(name = "items", fallbackMethod = "getFallBackMethodProduct2")
+    @TimeLimiter(name = "items")
     @GetMapping("/details2/{id}")
     public CompletableFuture<?> details3(@PathVariable Long id) throws InterruptedException {
         return CompletableFuture.supplyAsync(() -> {
