@@ -9,8 +9,10 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,8 +31,13 @@ public class ItemController {
     private final ItemService itemService;
     private final CircuitBreakerFactory cBreakerFactory;
 
+    // Inyectando para ver la configuracion en el properties
     @Value("${configuracion.texto}")
     private String texto;
+
+    // Inyectando el ambiente de dev properties
+    @Autowired
+    private Environment env;
 
     public ItemController(ItemService itemService, CircuitBreakerFactory cBreakerFactory) {
         this.itemService = itemService;
@@ -44,6 +51,11 @@ public class ItemController {
         json.put("port", port);
         logger.info(texto);
         logger.info(port);
+
+        if(env.getActiveProfiles().length > 0 && env.getActiveProfiles()[0].equals("dev")){
+            json.put("autor.name", env.getProperty("configuracion.autor.nombre"));
+            json.put("autor.email", env.getProperty("configuracion.autor.email"));
+        }
         return ResponseEntity.ok(json);
     }
 
