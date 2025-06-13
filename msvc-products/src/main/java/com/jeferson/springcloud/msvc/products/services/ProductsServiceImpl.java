@@ -3,7 +3,6 @@ package com.jeferson.springcloud.msvc.products.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ public class ProductsServiceImpl implements ProductService{
         this.environment = environment;
         this.productRepository = productRepository;
     }
-
 
     @Override
     @Transactional(readOnly = true)
@@ -39,5 +37,17 @@ public class ProductsServiceImpl implements ProductService{
             product.setPort(Integer.parseInt(environment.getProperty("local.server.port")));
             return product;
         });
+    }
+
+    @Override
+    @Transactional
+    public Product save(Product prodcut) {
+        return this.productRepository.save(prodcut);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long idProduct) {
+        productRepository.deleteById(idProduct);
     }
 }

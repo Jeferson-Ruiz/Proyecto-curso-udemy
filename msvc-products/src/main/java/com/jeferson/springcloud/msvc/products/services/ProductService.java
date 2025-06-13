@@ -9,4 +9,7 @@ public interface ProductService {
 
     Optional<Product> findById(Long id);
 
+    Product save(Product prodcut);
+
+    void delete(Long idProduct);
 }

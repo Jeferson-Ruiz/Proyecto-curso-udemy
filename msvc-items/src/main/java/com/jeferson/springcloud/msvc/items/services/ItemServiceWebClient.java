@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
 import com.jeferson.springcloud.msvc.items.models.ProductDto;
