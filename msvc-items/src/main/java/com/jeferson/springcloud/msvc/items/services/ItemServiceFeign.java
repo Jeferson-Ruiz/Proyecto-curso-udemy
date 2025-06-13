@@ -11,7 +11,7 @@ import com.jeferson.springcloud.msvc.items.models.ProductDto;
 import feign.FeignException.FeignClientException;
 
 @Service
-public class ItemServiceFeign implements ItemService{
+public class ItemServiceFeign implements ItemService {
 
     private final ProductFeignClient productFeignClient;
 
@@ -22,9 +22,9 @@ public class ItemServiceFeign implements ItemService{
     @Override
     public List<ItemDto> findByAll() {
         return productFeignClient.listProducts()
-            .stream()
-            .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
-            .collect(Collectors.toList());
+                .stream()
+                .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -41,10 +41,13 @@ public class ItemServiceFeign implements ItemService{
 
     @Override
     public ProductDto save(ProductDto product) {
+        return null;
     }
 
     @Override
     public ProductDto update(ProductDto product, Long id) {
+        return null;
+
     }
 
     @Override
