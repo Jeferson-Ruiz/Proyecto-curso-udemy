@@ -74,7 +74,7 @@ public class ItemServiceWebClient implements ItemService {
                 .uri("/{id}", params)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(MediaType.APPLICATION_JSON)
+                .bodyValue(product)
                 .retrieve()
                 .bodyToMono(ProductDto.class)
                 .block();

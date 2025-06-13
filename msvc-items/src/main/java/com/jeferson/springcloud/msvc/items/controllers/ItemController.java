@@ -14,9 +14,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
 import com.jeferson.springcloud.msvc.items.models.ProductDto;
@@ -142,4 +148,25 @@ public class ItemController {
             return ResponseEntity.ok(new ItemDto(product, 5));
         });
     }
+
+
+    // Metodos consumidos desde Api
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductDto create(@RequestBody ProductDto product){
+        return itemService.save(product);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductDto update(@RequestBody ProductDto product, @PathVariable Long id){
+        return itemService.update(product, id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        itemService.delete(id);
+    }
+
 }
