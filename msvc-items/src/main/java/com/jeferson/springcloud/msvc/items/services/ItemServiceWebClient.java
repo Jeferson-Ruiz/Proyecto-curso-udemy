@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient.Builder;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
 import com.jeferson.springcloud.msvc.items.models.ProductDto;
 
-@Primary
+// @Primary
 @Service
 public class ItemServiceWebClient implements ItemService {
 

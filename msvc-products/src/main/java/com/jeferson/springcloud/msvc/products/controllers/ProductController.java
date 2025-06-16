@@ -36,7 +36,7 @@ public class ProductController {
         }
 
         if (id.equals(7L)) {
-            TimeUnit.SECONDS.sleep(3L);
+            TimeUnit.SECONDS.sleep(1L);
         }
 
         Optional<Product> productOptional = productService.findById(id);
@@ -51,7 +51,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
     }
 
-    @PutMapping("{idproduct}")
+    @PutMapping("/{idproduct}")
     public ResponseEntity<?> update(@PathVariable Long idproduct, @RequestBody Product product) {
         Optional<Product> optProduct = productService.findById(idproduct);
         if (optProduct.isPresent()) {

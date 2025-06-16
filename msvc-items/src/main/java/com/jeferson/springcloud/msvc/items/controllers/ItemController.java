@@ -10,6 +10,7 @@ import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -47,7 +48,7 @@ public class ItemController {
     @Autowired
     private Environment env;
 
-    public ItemController(ItemService itemService, CircuitBreakerFactory cBreakerFactory) {
+    public ItemController(@Qualifier("itemServiceFeign") ItemService itemService, CircuitBreakerFactory cBreakerFactory) {
         this.itemService = itemService;
         this.cBreakerFactory = cBreakerFactory;
     }
