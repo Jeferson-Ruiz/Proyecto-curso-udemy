@@ -10,8 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
+
+import com.jeferson.libs.msvc.commons.entities.Product;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
-import com.jeferson.springcloud.msvc.items.models.ProductDto;
 
 // @Primary
 @Service
@@ -29,7 +30,7 @@ public class ItemServiceWebClient implements ItemService {
         .get()
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
-        .bodyToFlux(ProductDto.class)
+        .bodyToFlux(Product.class)
             .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
         .collectList()
             .block();
@@ -45,7 +46,7 @@ public class ItemServiceWebClient implements ItemService {
             return Optional.ofNullable(client.build().get().uri("/{id}",params)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .bodyToMono(ProductDto.class)
+            .bodyToMono(Product.class)
             .map(product -> new ItemDto(product, new Random().nextInt(10) + 1))
             .block());
 
@@ -55,18 +56,18 @@ public class ItemServiceWebClient implements ItemService {
     }
 
     @Override
-    public ProductDto save(ProductDto product) {
+    public Product save(Product product) {
         return client.build()
         .post()
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(product)
         .retrieve()
-        .bodyToMono(ProductDto.class)
+        .bodyToMono(Product.class)
             .block();
     }
 
     @Override
-    public ProductDto update(ProductDto product, Long id) {
+    public Product update(Product product, Long id) {
         Map<String, Long> params = new HashMap<>();
         params.put("id", id);
         return client.build()
@@ -76,7 +77,7 @@ public class ItemServiceWebClient implements ItemService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(product)
                 .retrieve()
-                .bodyToMono(ProductDto.class)
+                .bodyToMono(Product.class)
                 .block();
     }
 

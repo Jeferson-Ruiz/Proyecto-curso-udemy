@@ -8,22 +8,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.jeferson.springcloud.msvc.items.models.ProductDto;
+
+import com.jeferson.libs.msvc.commons.entities.Product;
 
 @FeignClient(name = "msvc-products")
 public interface ProductFeignClient {
 
     @GetMapping
-    List<ProductDto> listProducts();
+    List<Product> listProducts();
 
     @GetMapping("/{id}")
-    ProductDto details(@PathVariable Long id);
+    Product details(@PathVariable Long id);
 
     @PostMapping
-    ProductDto create(@RequestBody ProductDto prodcut);
+    Product create(@RequestBody Product product);
 
     @PutMapping("/{id}")
-    ProductDto update(@RequestBody ProductDto productDto, @PathVariable Long id);
+    Product update(@RequestBody Product product, @PathVariable Long id);
 
     @DeleteMapping("/{id}")
     void delete(@PathVariable Long id);

@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import com.jeferson.libs.msvc.commons.entities.Product;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
-import com.jeferson.springcloud.msvc.items.models.ProductDto;
 import com.jeferson.springcloud.msvc.items.services.ItemService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
@@ -79,7 +79,7 @@ public class ItemController {
         Optional<ItemDto> optItem = cBreakerFactory.create("items").run(() -> itemService.findById(id), e -> {
             System.out.println(e.getMessage());
             logger.error(e.getMessage());
-            ProductDto product = new ProductDto();
+            Product product = new Product();
             product.setCreateAt(LocalDate.now());
             product.setId(1L);
             product.setName("Camara Sony");
@@ -129,7 +129,7 @@ public class ItemController {
     public ResponseEntity<?> getFallBackMethodProduct(Throwable e) {
         System.out.println(e.getMessage());
         logger.error(e.getMessage());
-        ProductDto product = new ProductDto();
+        Product product = new Product();
         product.setCreateAt(LocalDate.now());
         product.setId(1L);
         product.setName("Camara Sony");
@@ -141,7 +141,7 @@ public class ItemController {
         return CompletableFuture.supplyAsync(() -> {
             System.out.println(e.getMessage());
             logger.error(e.getMessage());
-            ProductDto product = new ProductDto();
+            Product product = new Product();
             product.setCreateAt(LocalDate.now());
             product.setId(1L);
             product.setName("Camara Sony");
@@ -154,13 +154,13 @@ public class ItemController {
     // Metodos consumidos desde Api
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDto create(@RequestBody ProductDto product){
+    public Product create(@RequestBody Product product){
         return itemService.save(product);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDto update(@RequestBody ProductDto product, @PathVariable Long id){
+    public Product update(@RequestBody Product product, @PathVariable Long id){
         return itemService.update(product, id);
     }
 

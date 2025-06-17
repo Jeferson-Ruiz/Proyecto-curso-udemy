@@ -2,8 +2,8 @@ package com.jeferson.springcloud.msvc.items.services;
 
 import java.util.List;
 import java.util.Optional;
+import com.jeferson.libs.msvc.commons.entities.Product;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
-import com.jeferson.springcloud.msvc.items.models.ProductDto;
 
 public interface ItemService {
 
@@ -11,9 +11,9 @@ public interface ItemService {
 
     Optional<ItemDto> findById(Long id);
 
-    ProductDto save(ProductDto product);
+    Product save(Product product);
 
-    ProductDto update(ProductDto product, Long id);
+    Product update(Product product, Long id);
 
     void delete(Long id);
 }

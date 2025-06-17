@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.jeferson.springcloud.msvc.products.enties.Product;
+import com.jeferson.libs.msvc.commons.entities.Product;
 import com.jeferson.springcloud.msvc.products.services.ProductService;
 import org.springframework.web.bind.annotation.PutMapping;
 

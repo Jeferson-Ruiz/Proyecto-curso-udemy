@@ -37,6 +37,9 @@ public class Product {
         this.port = port;
     }
 
+    public Product(){
+    }
+
 
     public void setName(String name) {
         this.name = name;
@@ -54,6 +57,9 @@ public class Product {
         this.port = port;
     }
 
+    public void setId(Long id){
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

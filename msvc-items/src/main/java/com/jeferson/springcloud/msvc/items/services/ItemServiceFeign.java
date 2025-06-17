@@ -5,9 +5,9 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import com.jeferson.libs.msvc.commons.entities.Product;
 import com.jeferson.springcloud.msvc.items.clients.ProductFeignClient;
 import com.jeferson.springcloud.msvc.items.models.ItemDto;
-import com.jeferson.springcloud.msvc.items.models.ProductDto;
 import feign.FeignException.FeignClientException;
 
 @Service
@@ -31,7 +31,7 @@ public class ItemServiceFeign implements ItemService {
     public Optional<ItemDto> findById(Long id) {
 
         try {
-            ProductDto product = productFeignClient.details(id);
+            Product product = productFeignClient.details(id);
             return Optional.of(new ItemDto(product, new Random().nextInt(10) + 1));
 
         } catch (FeignClientException e) {
@@ -40,12 +40,12 @@ public class ItemServiceFeign implements ItemService {
     }
 
     @Override
-    public ProductDto save(ProductDto product) {
+    public Product save(Product product) {
         return productFeignClient.create(product);
     }
 
     @Override
-    public ProductDto update(ProductDto product, Long id) {
+    public Product update(Product product, Long id) {
         return productFeignClient.update(product, id);
     }
 

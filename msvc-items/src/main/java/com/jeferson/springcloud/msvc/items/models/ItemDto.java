@@ -1,5 +1,6 @@
 package com.jeferson.springcloud.msvc.items.models;
 
+import com.jeferson.libs.msvc.commons.entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ItemDto {
 
-    private ProductDto productDto; 
+    private Product productDto; 
     private int quantity;
 
 
