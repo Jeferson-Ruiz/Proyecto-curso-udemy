@@ -28,10 +28,11 @@ public class User {
     private String username;
 
     @NotBlank
+    @Column(name = "")
     private String password;
 
     @NotBlank
-    private boolean enable;
+    private Boolean enable;
 
     @Email
     @NotBlank
