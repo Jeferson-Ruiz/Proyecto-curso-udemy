@@ -51,7 +51,9 @@ public class UserController {
         return userOptional.map(userDb -> {
             userDb.setEmail(user.getEmail());
             userDb.setUsername(user.getUsername());
-            userDb.setEnable(user.getEnable());
+            if (user.getEnable() != null) {
+                userDb.setEnable(user.getEnable());
+            }
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userDb));
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
