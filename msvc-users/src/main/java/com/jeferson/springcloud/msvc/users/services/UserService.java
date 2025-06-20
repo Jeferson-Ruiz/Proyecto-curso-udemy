@@ -7,6 +7,8 @@ public interface UserService {
 
     User save(User user);
 
+    Optional<User> update(User user, Long id);
+
     Iterable<User> findAll();
 
     Optional<User> findById(Long id);

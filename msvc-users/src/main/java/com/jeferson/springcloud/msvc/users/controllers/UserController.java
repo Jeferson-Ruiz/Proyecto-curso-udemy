@@ -47,15 +47,10 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id){
-        Optional<User> userOptional = userService.findById(id);
-        return userOptional.map(userDb -> {
-            userDb.setEmail(user.getEmail());
-            userDb.setUsername(user.getUsername());
-            if (user.getEnable() != null) {
-                userDb.setEnable(user.getEnable());
-            }
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userDb));
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<User> userOptional = userService.update(user, id);
+
+        return userOptional.map(userUdt -> ResponseEntity.status(HttpStatus.CREATED).body(userUdt))
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
