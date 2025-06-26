@@ -5,15 +5,16 @@ import com.jeferson.springcloud.msvc.users.entities.User;
 
 public interface UserService {
 
-    User save(User user);
+    Optional<User> findById(Long id);
 
-    Optional<User> update(User user, Long id);
+    Optional<User> findByUsername(String username);
 
     Iterable<User> findAll();
 
-    Optional<User> findById(Long id);
+    User save(User user);
     
-    Optional<User> findByUsername(String username);
+    Optional<User> update(User user, Long id);
 
     void delete(Long id);
+
 }

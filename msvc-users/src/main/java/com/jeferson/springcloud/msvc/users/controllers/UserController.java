@@ -4,7 +4,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,41 +19,37 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user){
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         User savedUser = userService.save(user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return new ResponseEntity<>(savedUser,HttpStatus.CREATED);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
-    
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id) {
+        Optional<User> userUpdatedOptional = userService.update(user, id);
+
+        return userUpdatedOptional
+        .map(userUpdated -> ResponseEntity.status(HttpStatus.CREATED).body(userUpdated))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        Optional<User> optUser = userService.findById(id);
-        return optUser.map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<User> user = userService.findById(id);
+        return user.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        Optional<User> optUser = userService.findByUsername(username);
-        return optUser.map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id){
-        Optional<User> userOptional = userService.update(user, id);
-
-        return userOptional.map(userUdt -> ResponseEntity.status(HttpStatus.CREATED).body(userUdt))
-            .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<User> user = userService.findByUsername(username);
+        return user.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<User>> getAllUsers(){
+    public ResponseEntity<Iterable<User>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 
