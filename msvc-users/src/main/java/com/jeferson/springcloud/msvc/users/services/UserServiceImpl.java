@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public Optional<User> update(User user, Long id) {
         
         Optional<User> userOptional = this.findById(id);
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService{
             } else {
                 userDb.setEnabled(user.isEnabled());
             }
-            user.setRoles(getRoles(user));
+            userDb.setRoles(getRoles(user));
             
             return Optional.of(userRepository.save(userDb));
         }).orElseGet(() -> Optional.empty());

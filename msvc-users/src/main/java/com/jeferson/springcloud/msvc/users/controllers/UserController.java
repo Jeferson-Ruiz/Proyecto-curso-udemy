@@ -22,29 +22,24 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.save(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id) {
-        Optional<User> userUpdatedOptional = userService.update(user, id);
-
-        return userUpdatedOptional
-        .map(userUpdated -> ResponseEntity.status(HttpStatus.CREATED).body(userUpdated))
+        return userService.update(user, id).map(userUpdated -> ResponseEntity.status(HttpStatus.CREATED)
+            .body(userUpdated))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        Optional<User> user = userService.findById(id);
-        return user.map(ResponseEntity::ok)
+        return userService.findById(id).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        Optional<User> user = userService.findByUsername(username);
-        return user.map(ResponseEntity::ok)
+        return userService.findByUsername(username).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
