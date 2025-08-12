@@ -1,5 +1,12 @@
 package com.jeferson.springcloud.app.gateway.filters.factory;
 
+public class SampleCookieGatewayFilterFactory{
+
+    
+}
+
+
+/*
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +85,7 @@ public class SampleCookieGatewayFilterFactory
         public void setMessage(String message) {
             this.message = message;
         }
-
     }
-
 }
+
+*/

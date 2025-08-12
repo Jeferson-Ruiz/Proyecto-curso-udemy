@@ -42,6 +42,7 @@ spring:
             issuer-uri: http://127.0.0.1:9100  
   cloud:
     gateway:
+     mvc:
       routes:
         - id: msvc-oauth
           uri: lb://msvc-oauth
@@ -71,7 +72,7 @@ spring:
                statusCodes: 500
                fallbackUri: forward:/api/items/1
            - StripPrefix=2
-           - EjemploCookie=mensaje personalizado productos, user, jeferson
+          #  - EjemploCookie=mensaje personalizado productos, user, jeferson
         - id: msvc-items
           uri: lb://msvc-items
           predicates:
