@@ -124,6 +124,11 @@ public class SecurityConfig {
 				.postLogoutRedirectUri("http://127.0.0.1:8090/logout")
 				.scope(OidcScopes.OPENID)
 				.scope(OidcScopes.PROFILE)
+				.tokenSettings(TokenSettings // actualizar tiempo de vida del token
+						.builder()
+						.accessTokenTimeToLive(Duration.ofHours(
+								1))
+						.refreshTokenTimeToLive(Duration.ofDays(1)).build())
 				.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
 				.build();
 
