@@ -4,6 +4,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -39,6 +40,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
@@ -58,19 +60,17 @@ public class SecurityConfig {
 			throws Exception {
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-			.oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
+				.oidc(Customizer.withDefaults()); // Enable OpenID Connect 1.0
 		http
-			// Redirect to the login page when not authenticated from the
-			// authorization endpoint
-			.exceptionHandling((exceptions) -> exceptions
-				.defaultAuthenticationEntryPointFor(
-					new LoginUrlAuthenticationEntryPoint("/login"),
-					new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-				)
-			)
-			// Accept access tokens for User Info and/or Client Registration
-			.oauth2ResourceServer((resourceServer) -> resourceServer
-				.jwt(Customizer.withDefaults()));
+				// Redirect to the login page when not authenticated from the
+				// authorization endpoint
+				.exceptionHandling((exceptions) -> exceptions
+						.defaultAuthenticationEntryPointFor(
+								new LoginUrlAuthenticationEntryPoint("/login"),
+								new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
+				// Accept access tokens for User Info and/or Client Registration
+				.oauth2ResourceServer((resourceServer) -> resourceServer
+						.jwt(Customizer.withDefaults()));
 
 		return http.build();
 	}
@@ -80,35 +80,35 @@ public class SecurityConfig {
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
 			throws Exception {
 		http
-			.authorizeHttpRequests((authorize) -> authorize
-				.anyRequest().authenticated()
-			)
-			// Form login handles the redirect to the login page from the
-			// authorization server filter chain
-			.csrf(csrf -> csrf.disable())
-			.formLogin(Customizer.withDefaults());
+				.authorizeHttpRequests((authorize) -> authorize
+						.anyRequest().authenticated())
+				// Form login handles the redirect to the login page from the
+				// authorization server filter chain
+				.csrf(csrf -> csrf.disable())
+				.formLogin(Customizer.withDefaults());
 
 		return http.build();
 	}
 
 	/*
-	Usuarios en memoria con Roles, empleado para hacer pruebas
-	@Bean
-	UserDetailsService userDetailsService() {
-		UserDetails userDetails = User.builder()
-				.username("jeferson")
-				.password("{noop}12345")
-				.roles("USER")
-				.build();
-        
-        UserDetails admin = User.builder()
-				.username("admin")
-				.password("{noop}12345")
-				.roles("USER","ADMIN")
-				.build();
-		return new InMemoryUserDetailsManager(userDetails, admin);
-	}
-	*/
+	 * Usuarios en memoria con Roles, empleado para hacer pruebas
+	 * 
+	 * @Bean
+	 * UserDetailsService userDetailsService() {
+	 * UserDetails userDetails = User.builder()
+	 * .username("jeferson")
+	 * .password("{noop}12345")
+	 * .roles("USER")
+	 * .build();
+	 * 
+	 * UserDetails admin = User.builder()
+	 * .username("admin")
+	 * .password("{noop}12345")
+	 * .roles("USER","ADMIN")
+	 * .build();
+	 * return new InMemoryUserDetailsManager(userDetails, admin);
+	 * }
+	 */
 
 	@Bean
 	RegisteredClientRepository registeredClientRepository() {
@@ -149,8 +149,7 @@ public class SecurityConfig {
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(2048);
 			keyPair = keyPairGenerator.generateKeyPair();
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw new IllegalStateException(ex);
 		}
 		return keyPair;
@@ -168,14 +167,14 @@ public class SecurityConfig {
 
 	// Agregar info adicional al token relacionada con los Tokens
 	@Bean
-	OAuth2TokenCustomizer <JwtEncodingContext> tokenCustomizer(){
+	OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
 		return context -> {
 			if (context.getTokenType().getValue() == OAuth2TokenType.ACCESS_TOKEN.getValue()) {
 				Authentication principal = context.getPrincipal();
 				context.getClaims().claim("roles", principal.getAuthorities()
-					.stream()
-					.map(GrantedAuthority::getAuthority)
-					.collect(Collectors.toList()));			
+						.stream()
+						.map(GrantedAuthority::getAuthority)
+						.collect(Collectors.toList()));
 			}
 		};
 	}
