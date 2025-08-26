@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.jeferson.libs.msvc.commons.entities.Product;
@@ -69,7 +71,13 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> list() {
+    public List<ItemDto> list(@RequestParam(name = "name", required = false)String name, 
+        @RequestHeader(name = "token-request", required = false) String token) {
+            logger.info("Llamada al metodo del controller ItemController::list()");
+            logger.info("Request Parameter: {}", name);
+            logger.info("Token: {}", token);
+            System.out.println(token);
+
         return itemService.findByAll();
     }
 
@@ -155,18 +163,21 @@ public class ItemController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Product create(@RequestBody Product product){
+        logger.info("Product creando: {}", product);
         return itemService.save(product);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Product update(@RequestBody Product product, @PathVariable Long id){
+        logger.info("Product actualizando: {}", product);
         return itemService.update(product, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
+        logger.info("Product eliminado: {}", id);
         itemService.delete(id);
     }
 
