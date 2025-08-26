@@ -56,22 +56,22 @@ spring:
           - Path=/api/users/**
           filters:
           - StripPrefix=2
-        - id: msvc-products
-          uri: lb://msvc-products
-          predicates:
-            - Path=/api/products/**
+        # - id: msvc-products         --        
+        #   uri: lb://msvc-products     | Se comenta porque no funciona sin programacion reactiva, hacerlo programatica
+        #   predicates:                 |
+        #     - Path=/api/products/** --
             # - Header=token, \d+
             # - Method=GET,POST
             # - Query=color
             # - Cookie=color, azul
             # - Header=Content-Type, application/json
-          filters:
-           - name: CircuitBreaker
-             args:
-               name: products
-               statusCodes: 500
-               fallbackUri: forward:/api/items/1
-           - StripPrefix=2
+          # filters:                                 --
+          #  - name: CircuitBreaker                    | 
+          #    args:                                   |
+          #      name: products                        |- Se comenta porque no funciona sin programacion reactiva, hacerlo programatica
+          #      statusCodes: 500                      |
+          #      fallbackUri: forward:/api/items/1     | 
+          #  - StripPrefix=2                         --
           #  - EjemploCookie=mensaje personalizado productos, user, jeferson
         - id: msvc-items
           uri: lb://msvc-items
