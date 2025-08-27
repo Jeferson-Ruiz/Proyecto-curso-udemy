@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import com.jeferson.springcloud.msvc.oauth.models.User;
-
 import io.micrometer.tracing.Tracer;
-
 
 @Service
 public class UsersService implements UserDetailsService {
@@ -29,6 +27,7 @@ public class UsersService implements UserDetailsService {
     @Autowired
     private WebClient client;
 
+    // Inyectar para logs personalizados en zipkin
     @Autowired
     private Tracer tracer;
 
@@ -50,7 +49,7 @@ public class UsersService implements UserDetailsService {
             .collect(Collectors.toList());
         
             logger.info("Se ha realizado el login con exito: {}", user);
-            tracer.currentSpan().tag("success.login", "login con exito: "+ username);
+            tracer.currentSpan().tag("success.login", "login con exito: "+ username); //Mensaje personalizado de zipkin
             return  new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
                     user.getPassword(),
@@ -60,7 +59,8 @@ public class UsersService implements UserDetailsService {
         } catch (WebClientResponseException e) {
             String error = "Error en el login, no existe el user "+ username;
             logger.error(error, e);
-            tracer.currentSpan().tag("error.login.message", error +": "+ e.getMessage());
+
+            tracer.currentSpan().tag("error.login.message", error +": "+ e.getMessage()); //Mensaje personalizado de zipkin
             throw new UsernameNotFoundException(error);
         }
     }
